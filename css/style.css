@@ -454,6 +454,22 @@ button {
     display: inline-block;
 }
 
+.label-auth input.error {
+    border-color: #cd0000;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.label-auth .error-message {
+    display: none;
+    color: #cd0000;
+    font-size: 0.75rem;
+    display: block;
+    margin-left: 85px;
+    margin-top: 4px;
+    width: 100%;
+}
+
 .modal-header {
     display: flex;
     align-items: center;
@@ -774,7 +790,14 @@ button {
     }
 }
 
+@media (max-width: 506px) {
+    .label-auth .error-message {
+        margin-left: 0px;
+    }
+}
+
 @media (max-width: 480px) {
+    
     .button-text {
         display: none;
     }

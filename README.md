@@ -1,8 +1,6 @@
-# delivery-food
-
-Pet project.
-Portfolio project.
-Based on Glo Academy workshop.
+# Delivery Food
+###### Pet project. Based on [Glo Academy](https://glo.academy/) workshop (many thanks).
+---
+##### LIVE DEMO: https://maksympc.github.io/delivery-food/
 
 Vanilla JS, HTML, CSS
-Live demo: https://maksympc.github.io/delivery-food/
