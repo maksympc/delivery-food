@@ -63,7 +63,7 @@ function toogleModalAuth() {
 function logIn(event) {
   const loginValue = loginInput.value;
   const passwordValue = passwordInput.value;
-  console.log('#passwordValue:', passwordValue);
+
   event.preventDefault();
   if (loginValue && passwordValue) {
     login = loginValue;
