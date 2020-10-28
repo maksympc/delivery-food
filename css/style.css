@@ -634,16 +634,19 @@ button {
 
 
     .kebab {
+        padding: 50px;
         background-position: top 55px right -100px;
         background-size: 385px;
     }
 
     .vegetables {
+        padding: 50px;
         background-position: top 0 right -280px;
         background-size: 810px;
     }
 
     .sushi {
+        padding: 50px;
         background-position: top 30px right -175px;
     }
 
