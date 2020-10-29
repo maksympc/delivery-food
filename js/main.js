@@ -28,6 +28,8 @@ const restaurants = document.querySelector('.restaurants');
 const menu = document.querySelector('.menu');
 const logo = document.querySelector('.logo');
 const cardsMenu = document.querySelector('.cards-menu');
+const inputSearch = document.querySelector('.input-search');
+
 
 /** Fetch data */
 const getData = async (url) => {
@@ -233,27 +235,27 @@ function initializeGoods(goods) {
 }
 
 function updateRestaurantHeader({
-  kitchen,
-  name,
+  kitchen = '',
+  name = '',
   price,
-  stars
+  stars = ''
 }) {
-  
+
   const restaurantTitle = menu.querySelector('.restaurant-title');
   const restaurantRating = menu.querySelector('.rating');
   const restaurantPrice = menu.querySelector('.price');
   const restaurantCategory = menu.querySelector('.category');
   restaurantTitle.textContent = name;
   restaurantRating.textContent = stars;
-  restaurantPrice.textContent = `От ${price} ₽`;
+  restaurantPrice.textContent = typeof price != 'undefined' ? `От ${price} ₽` : '';
   restaurantCategory.textContent = kitchen;
 }
 
 function openGoods(event) {
-  const target = event.target;
-  const restaurant = target.closest('.card-restaurant');
-  if (restaurant) {
-    if (login) {
+  if (login) {
+    const target = event.target;
+    const restaurant = target.closest('.card-restaurant');
+    if (restaurant) {
       cardsMenu.textContent = '';
       containerPromo.classList.add('hide');
       restaurants.classList.add('hide');
@@ -261,11 +263,10 @@ function openGoods(event) {
       const info = JSON.parse(decodeURI(restaurant.dataset.info));
       updateRestaurantHeader(info);
       getData(`./db/${info.products}`).then(initializeGoods);
-    } else {
-      toogleModalAuth();
     }
+  } else {
+    toogleModalAuth();
   }
-
 }
 
 function initializeRestaurants(partners) {
@@ -280,6 +281,30 @@ getData('./db/partners.json').then((partners) => {
 
 
 cardsRestaurants.addEventListener('click', openGoods);
+
+/** Search functions */
+inputSearch.addEventListener('keypress', async (e) => {
+  const searchInputValue = e.target.value; 
+  if (searchInputValue && e.keyCode === 13) {
+    cardsMenu.textContent = '';
+    const response = await getData(`./db/partners.json`);
+    const linkProducts = response.map(i => i.products);
+    linkProducts.forEach(async link => {
+      const fetchedGoods = await getData(`./db/${link}`);
+       
+      containerPromo.classList.add('hide');
+      restaurants.classList.add('hide');
+      menu.classList.remove('hide');
+      updateRestaurantHeader({
+        name: "Результати поиска",
+        kitchen: 'разная кухня'
+      });
+      const resultSearch = fetchedGoods.filter(i => i.name.toLowerCase().includes(searchInputValue.toLowerCase()));
+      initializeGoods(resultSearch);
+    });
+  }
+})
+
 
 /** Logo functions */
 function hideGoods() {
