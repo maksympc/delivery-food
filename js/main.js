@@ -1,201 +1,6 @@
 "use strict";
+
 import Swiper from 'https://unpkg.com/swiper/swiper-bundle.esm.browser.min.js';
-
-const restaurantsArr = [`<a class="card card-restaurant">
-<img src="img/pizza-plus/preview.jpg" alt="image" class="card-image" />
-<div class="card-text">
-  <div class="card-heading">
-    <h3 class="card-title">Пицца плюс</h3>
-    <span class="card-tag tag">50 мин</span>
-  </div>
-  <div class="card-info">
-    <div class="rating">
-      4.5
-    </div>
-    <div class="price">От 900 ₽</div>
-    <div class="category">Пицца</div>
-  </div>
-</div>
-</a>`, `<a  class="card card-restaurant">
-<img src="img/tanuki/preview.jpg" alt="image" class="card-image" />
-<div class="card-text">
-  <div class="card-heading">
-    <h3 class="card-title">Тануки</h3>
-    <span class="card-tag tag">60 мин</span>
-  </div>
-  <div class="card-info">
-    <div class="rating">
-      4.5
-    </div>
-    <div class="price">От 1 200 ₽</div>
-    <div class="category">Суши, роллы</div>
-  </div>
-</div>
-</a>`, `<a class="card card-restaurant">
-<img src="img/food-band/preview.jpg" alt="image" class="card-image" />
-<div class="card-text">
-  <div class="card-heading">
-    <h3 class="card-title">FoodBand</h3>
-    <span class="card-tag tag">40 мин</span>
-  </div>
-  <div class="card-info">
-    <div class="rating">
-      4.5
-    </div>
-    <div class="price">От 450 ₽</div>
-    <div class="category">Пицца</div>
-  </div>
-</div>
-</a>`, `<a class="card card-restaurant">
-<img src="img/palki-skalki/preview.jpg" alt="image" class="card-image" />
-<div class="card-text">
-  <div class="card-heading">
-    <h3 class="card-title">Палки скалки</h3>
-    <span class="card-tag tag">55 мин</span>
-  </div>
-  <div class="card-info">
-    <div class="rating">
-      4.5
-    </div>
-    <div class="price">От 500 ₽</div>
-    <div class="category">Пицца</div>
-  </div>
-</div>
-</a>`, `<a class="card card-restaurant">
-<img src="img/gusi-lebedi/preview.jpg" alt="image" class="card-image" />
-<div class="card-text">
-  <div class="card-heading">
-    <h3 class="card-title">Гуси Лебеди</h3>
-    <span class="card-tag tag">75 мин</span>
-  </div>
-  <div class="card-info">
-    <div class="rating">
-      4.5
-    </div>
-    <div class="price">От 1 000 ₽</div>
-    <div class="category">Русская кухня</div>
-  </div>
-</div>
-</a>`, `<a class="card card-restaurant">
-<img src="img/pizza-burger/preview.jpg" alt="image" class="card-image" />
-<div class="card-text">
-  <div class="card-heading">
-    <h3 class="card-title">PizzaBurger</h3>
-    <span class="card-tag tag">45 мин</span>
-  </div>
-  <div class="card-info">
-    <div class="rating">
-      4.5
-    </div>
-    <div class="price">От 700 ₽</div>
-    <div class="category">Пицца</div>
-  </div>
-</div>
-</a>`];
-
-const goodsArr = [`<img src="img/pizza-plus/pizza-vesuvius.jpg" alt="image" class="card-image" />
-<div class="card-text">
-  <div class="card-heading">
-    <h3 class="card-title card-title-reg">Пицца Везувий</h3>
-  </div>
-  <div class="card-info">
-    <div class="ingredients">Соус томатный, сыр «Моцарелла», ветчина, пепперони, перец
-      «Халапенье», соус «Тобаско», томаты.
-    </div>
-  </div>
-  <div class="card-buttons">
-    <button class="button button-primary button-add-cart">
-      <span class="button-card-text">В корзину</span>
-      <span class="button-cart-svg"></span>
-    </button>
-    <strong class="card-price-bold">545 ₽</strong>
-  </div>
-</div>`, `<img src="img/pizza-plus/pizza-girls.jpg" alt="image" class="card-image" />
-<div class="card-text">
-  <div class="card-heading">
-    <h3 class="card-title card-title-reg">Пицца Девичник</h3>
-  </div>
-  <div class="card-info">
-    <div class="ingredients">Соус томатный, постное тесто, нежирный сыр, кукуруза, лук,
-      маслины,
-      грибы, помидоры, болгарский перец.
-    </div>
-  </div>
-  <div class="card-buttons">
-    <button class="button button-primary button-add-cart">
-      <span class="button-card-text">В корзину</span>
-      <span class="button-cart-svg"></span>
-    </button>
-    <strong class="card-price-bold">450 ₽</strong>
-  </div>
-</div>`, `<img src="img/pizza-plus/pizza-oleole.jpg" alt="image" class="card-image" />
-<div class="card-text">
-  <div class="card-heading">
-    <h3 class="card-title card-title-reg">Пицца Оле-Оле</h3>
-  </div>
-  <div class="card-info">
-    <div class="ingredients">Соус томатный, сыр «Моцарелла», черри, маслины, зелень, майонез
-    </div>
-  </div>
-  <div class="card-buttons">
-    <button class="button button-primary button-add-cart">
-      <span class="button-card-text">В корзину</span>
-      <span class="button-cart-svg"></span>
-    </button>
-    <strong class="card-price-bold">440 ₽</strong>
-  </div>
-</div>`, `<img src="img/pizza-plus/pizza-plus.jpg" alt="image" class="card-image" />
-<div class="card-text">
-  <div class="card-heading">
-    <h3 class="card-title card-title-reg">Пицца Плюс</h3>
-  </div>
-  <div class="card-info">
-    <div class="ingredients">Соус томатный, сыр «Моцарелла», сыр «Чеддер», томаты,
-      пепперони,
-      телятина, грибы, бекон, болгарский перец.
-    </div>
-  </div>
-  <div class="card-buttons">
-    <button class="button button-primary button-add-cart">
-      <span class="button-card-text">В корзину</span>
-      <span class="button-cart-svg"></span>
-    </button>
-    <strong class="card-price-bold">805 ₽</strong>
-  </div>
-</div>`, `<img src="img/pizza-plus/pizza-hawaiian.jpg" alt="image" class="card-image" />
-<div class="card-text">
-  <div class="card-heading">
-    <h3 class="card-title card-title-reg">Пицца Гавайская</h3>
-  </div>
-  <div class="card-info">
-    <div class="ingredients">Соус томатный, сыр «Моцарелла», ветчина, ананасы</div>
-  </div>
-  <div class="card-buttons">
-    <button class="button button-primary button-add-cart">
-      <span class="button-card-text">В корзину</span>
-      <span class="button-cart-svg"></span>
-    </button>
-    <strong class="card-price-bold">440 ₽</strong>
-  </div>
-</div>`, `<img src="img/pizza-plus/pizza-classic.jpg" alt="image" class="card-image" />
-<div class="card-text">
-  <div class="card-heading">
-    <h3 class="card-title card-title-reg">Пицца Классика</h3>
-  </div>
-  <div class="card-info">
-    <div class="ingredients">Соус томатный, сыр «Моцарелла», сыр «Пармезан», ветчина,
-      салями,
-      грибы.
-    </div>
-  </div>
-  <div class="card-buttons">
-    <button class="button button-primary button-add-cart">
-      <span class="button-card-text">В корзину</span>
-      <span class="button-cart-svg"></span>
-    </button>
-    <strong class="card-price-bold">510 ₽</strong>
-  </div>
-</div>`];
 
 const LOCALSTORAGE = {
   LOGIN: 'supersecretfield#1'
@@ -223,6 +28,19 @@ const restaurants = document.querySelector('.restaurants');
 const menu = document.querySelector('.menu');
 const logo = document.querySelector('.logo');
 const cardsMenu = document.querySelector('.cards-menu');
+
+/** Fetch data */
+const getData = async (url) => {
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch: ${url}, status: ${response.status}`);
+  }
+
+  return await response.json();
+
+}
 
 /** Validation functions and initialization */
 function hideLoginError() {
@@ -346,36 +164,103 @@ checkAuth();
 
 
 /** Cards functions */
-function createCardRestaurants(i) {
-  cardsRestaurants.insertAdjacentHTML('beforeend', restaurantsArr[i]);
+function createCardRestaurants(data) {
+  const {
+    image,
+    kitchen,
+    name,
+    price,
+    products,
+    stars,
+    time_of_delivery
+  } = data;
+  const restaurantHtml = `<a class="card card-restaurant" data-info="${encodeURI(JSON.stringify(data))}">
+  <img src="${image}" alt="image" class="card-image" />
+  <div class="card-text">
+    <div class="card-heading">
+      <h3 class="card-title">${name}</h3>
+      <span class="card-tag tag">${time_of_delivery} мин</span>
+    </div>
+    <div class="card-info">
+      <div class="rating">
+        ${stars}
+      </div>
+      <div class="price">От ${price} ₽</div>
+      <div class="category">${kitchen}</div>
+    </div>
+  </div>
+  </a>`;
+  cardsRestaurants.insertAdjacentHTML('beforeend', restaurantHtml);
 }
 
-function createCardGood(i) {
+function createCardGood(good) {
+  const {
+    description,
+    id,
+    image,
+    name,
+    price
+  } = good;
+
   const card = document.createElement('div');
   card.className = 'card';
-  card.insertAdjacentHTML('beforeend', goodsArr[i]);
+  card.id = id;
+  const goodHtml = `<img src="${image}" alt="image" class="card-image" />
+  <div class="card-text">
+    <div class="card-heading">
+      <h3 class="card-title card-title-reg">${name}</h3>
+    </div>
+    <div class="card-info">
+      <div class="ingredients">${description}</div>
+    </div>
+    <div class="card-buttons">
+      <button class="button button-primary button-add-cart">
+        <span class="button-card-text">В корзину</span>
+        <span class="button-cart-svg"></span>
+      </button>
+      <strong class="card-price-bold">${price} ₽</strong>
+    </div>
+  </div>`;
+
+  card.insertAdjacentHTML('beforeend', goodHtml);
   cardsMenu.insertAdjacentElement('beforeend', card);
 }
 
-function initializeGoods() {
-  for (let i = 0; i < goodsArr.length; i++) {
-    createCardGood(i);
+function initializeGoods(goods) {
+  for (let i = 0; i < goods.length; i++) {
+    createCardGood(goods[i]);
   }
+}
+
+function updateRestaurantHeader({
+  kitchen,
+  name,
+  price,
+  stars
+}) {
+  
+  const restaurantTitle = menu.querySelector('.restaurant-title');
+  const restaurantRating = menu.querySelector('.rating');
+  const restaurantPrice = menu.querySelector('.price');
+  const restaurantCategory = menu.querySelector('.category');
+  restaurantTitle.textContent = name;
+  restaurantRating.textContent = stars;
+  restaurantPrice.textContent = `От ${price} ₽`;
+  restaurantCategory.textContent = kitchen;
 }
 
 function openGoods(event) {
   const target = event.target;
   const restaurant = target.closest('.card-restaurant');
-
   if (restaurant) {
     if (login) {
       cardsMenu.textContent = '';
-
       containerPromo.classList.add('hide');
       restaurants.classList.add('hide');
       menu.classList.remove('hide');
-
-      initializeGoods();
+      const info = JSON.parse(decodeURI(restaurant.dataset.info));
+      updateRestaurantHeader(info);
+      getData(`./db/${info.products}`).then(initializeGoods);
     } else {
       toogleModalAuth();
     }
@@ -383,13 +268,16 @@ function openGoods(event) {
 
 }
 
-function initializeRestaurants() {
-  for (let i = 0; i < restaurantsArr.length; i++) {
-    createCardRestaurants(i);
+function initializeRestaurants(partners) {
+  for (let i = 0; i < partners.length; i++) {
+    createCardRestaurants(partners[i]);
   }
 }
 
-initializeRestaurants();
+getData('./db/partners.json').then((partners) => {
+  initializeRestaurants(partners);
+});
+
 
 cardsRestaurants.addEventListener('click', openGoods);
 
