@@ -3,7 +3,8 @@
 import Swiper from 'https://unpkg.com/swiper/swiper-bundle.esm.browser.min.js';
 
 const LOCALSTORAGE = {
-  LOGIN: 'supersecretfield#1'
+  LOGIN: 'supersecretfield#1',
+  CART: 'cart',
 }
 
 let login = localStorage.getItem(LOCALSTORAGE.LOGIN);
@@ -33,7 +34,13 @@ const modalBody = document.querySelector('.modal-body');
 const modalPrice = document.querySelector('.modal-pricetag');
 const buttonClearCart = document.querySelector('.clear-cart');
 
-const cart = [];
+let cart = [];
+try {
+  cart = JSON.parse(localStorage.getItem(LOCALSTORAGE.CART)) || [];
+} catch(err) {
+  console.log('Looks like your cart has been spoiled');
+  localStorage.setItem(LOCALSTORAGE.CART, null);
+}
 
 /** Fetch data */
 const getData = async (url) => {
@@ -132,6 +139,7 @@ function logIn(event) {
 function logOut(event) {
   login = null;
   localStorage.removeItem(LOCALSTORAGE.LOGIN);
+  localStorage.removeItem(LOCALSTORAGE.CART);
   buttonAuth.style.display = '';
   userName.style.display = '';
   buttonOut.style.display = '';
@@ -347,6 +355,7 @@ function renderCart() {
 function rerenderCart() {
   renderCart();
   totalPrice();
+  localStorage.setItem(LOCALSTORAGE.CART, JSON.stringify(cart));
 }
 
 function toggleCartModal() {
