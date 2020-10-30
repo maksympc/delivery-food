@@ -29,7 +29,11 @@ const menu = document.querySelector('.menu');
 const logo = document.querySelector('.logo');
 const cardsMenu = document.querySelector('.cards-menu');
 const inputSearch = document.querySelector('.input-search');
+const modalBody = document.querySelector('.modal-body');
+const modalPrice = document.querySelector('.modal-pricetag');
+const buttonClearCart = document.querySelector('.clear-cart');
 
+const cart = [];
 
 /** Fetch data */
 const getData = async (url) => {
@@ -76,10 +80,6 @@ function disabledScroll() {
 
 function enableScroll() {
 
-}
-
-function toggleModal() {
-  modal.classList.toggle("is-open");
 }
 
 function toogleModalAuth() {
@@ -135,6 +135,7 @@ function logOut(event) {
   buttonAuth.style.display = '';
   userName.style.display = '';
   buttonOut.style.display = '';
+  cartButton.style.display = '';
   buttonOut.removeEventListener('click', logOut);
   checkAuth();
 }
@@ -143,7 +144,8 @@ function authorized() {
   buttonAuth.style.display = 'none';
   userName.textContent = login;
   userName.style.display = 'inline';
-  buttonOut.style.display = 'block';
+  buttonOut.style.display = 'flex';
+  cartButton.style.display = 'flex';
   buttonOut.addEventListener('click', logOut);
 }
 
@@ -161,9 +163,6 @@ function checkAuth() {
     notAuthorized();
   }
 }
-
-checkAuth();
-
 
 /** Cards functions */
 function createCardRestaurants(data) {
@@ -205,7 +204,7 @@ function createCardGood(good) {
   } = good;
 
   const card = document.createElement('div');
-  card.className = 'card';
+  card.classList.add('card');
   card.id = id;
   const goodHtml = `<img src="${image}" alt="image" class="card-image" />
   <div class="card-text">
@@ -280,31 +279,6 @@ getData('./db/partners.json').then((partners) => {
 });
 
 
-cardsRestaurants.addEventListener('click', openGoods);
-
-/** Search functions */
-inputSearch.addEventListener('keypress', async (e) => {
-  const searchInputValue = e.target.value; 
-  if (searchInputValue && e.keyCode === 13) {
-    cardsMenu.textContent = '';
-    const response = await getData(`./db/partners.json`);
-    const linkProducts = response.map(i => i.products);
-    linkProducts.forEach(async link => {
-      const fetchedGoods = await getData(`./db/${link}`);
-       
-      containerPromo.classList.add('hide');
-      restaurants.classList.add('hide');
-      menu.classList.remove('hide');
-      updateRestaurantHeader({
-        name: "Результати поиска",
-        kitchen: 'разная кухня'
-      });
-      const resultSearch = fetchedGoods.filter(i => i.name.toLowerCase().includes(searchInputValue.toLowerCase()));
-      initializeGoods(resultSearch);
-    });
-  }
-})
-
 
 /** Logo functions */
 function hideGoods() {
@@ -313,11 +287,7 @@ function hideGoods() {
   menu.classList.add('hide');
 }
 
-logo.addEventListener('click', hideGoods);
 
-/** Cart functions */
-cartButton.addEventListener("click", toggleModal);
-close.addEventListener("click", toggleModal);
 
 /** Swiper slider */
 const swiper = new Swiper('.swiper-container', {
@@ -345,3 +315,129 @@ const swiper = new Swiper('.swiper-container', {
     draggable: true,
   },
 });
+
+/** Cart functions  */
+function totalPrice() {
+  const totalPrice = cart.reduce((acc, i) => acc += (parseFloat(i.price) * i.count), 0);
+  modalPrice.textContent = `${totalPrice} ₽`;
+}
+
+function renderCart() {
+  modalBody.textContent = '';
+  cart.forEach(item => {
+    const {
+      price,
+      count,
+      id,
+      title
+    } = item;
+    const itemCart = `<div class="food-row">
+    <span class="food-name">${title}</span>
+    <strong class="food-price">${price}</strong>
+    <div class="food-counter">
+      <button class="counter-button counter-pop" data-id="${id}">-</button>
+      <span class="counter">${count}</span>
+      <button class="counter-button counter-push" data-id="${id}">+</button>
+    </div>
+  </div>`;
+    modalBody.insertAdjacentHTML('beforeend', itemCart);
+  })
+}
+
+function rerenderCart() {
+  renderCart();
+  totalPrice();
+}
+
+function toggleCartModal() {
+  rerenderCart();
+  modal.classList.toggle("is-open");
+}
+
+function addToCart(e) {
+  const target = e.target;
+  const buttonAddToCart = target.closest('.button-add-cart');
+
+  if (buttonAddToCart) {
+    const card = target.closest('.card');
+    const title = card.querySelector('.card-title-reg').textContent;
+    const price = card.querySelector('.card-price-bold').textContent;
+    const id = card.id
+
+    const food = cart.find(i => i.id === id);
+    if (food) {
+      food.count += 1;
+    } else {
+      cart.push({
+        id,
+        title,
+        price,
+        count: 1
+      });
+    }
+  }
+}
+
+function changeCartItemsCount(e) {
+  const {
+    target
+  } = e;
+
+  if (target.classList.contains('counter-button')) {
+    const index = cart.findIndex(item => item.id === target.dataset.id)
+    const food = index !== -1 ? cart[index] : null;
+    if (food) {
+      if (target.classList.contains('counter-push')) {
+        food.count++;
+      } else if (target.classList.contains('counter-pop')) {
+        food.count--;
+        if (food.count === 0) {
+          cart.splice(index, 1);
+        }
+      }
+    }
+    rerenderCart()
+  }
+}
+
+
+function init() {
+  logo.addEventListener('click', hideGoods);
+  cartButton.addEventListener("click", () => {
+    rerenderCart();
+    toggleCartModal();
+  });
+  close.addEventListener("click", toggleCartModal);
+  cardsMenu.addEventListener('click', addToCart);
+  cardsRestaurants.addEventListener('click', openGoods);
+  buttonClearCart.addEventListener('click', () => {cart.length = 0; rerenderCart()});
+  modalBody.addEventListener('click', changeCartItemsCount);
+
+  /** Search functions */
+  inputSearch.addEventListener('keypress', async (e) => {
+    const searchInputValue = e.target.value;
+    if (searchInputValue && e.keyCode === 13) {
+      cardsMenu.textContent = '';
+      const response = await getData(`./db/partners.json`);
+      const linkProducts = response.map(i => i.products);
+      linkProducts.forEach(async link => {
+        const fetchedGoods = await getData(`./db/${link}`);
+
+        containerPromo.classList.add('hide');
+        restaurants.classList.add('hide');
+        menu.classList.remove('hide');
+        updateRestaurantHeader({
+          name: "Результати поиска",
+          kitchen: 'разная кухня'
+        });
+        const resultSearch = fetchedGoods.filter(i => i.name.toLowerCase().includes(searchInputValue.toLowerCase()));
+        initializeGoods(resultSearch);
+      });
+    }
+  })
+
+  checkAuth()
+}
+
+
+init();
