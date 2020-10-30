@@ -37,7 +37,7 @@ const buttonClearCart = document.querySelector('.clear-cart');
 let cart = [];
 try {
   cart = JSON.parse(localStorage.getItem(LOCALSTORAGE.CART)) || [];
-} catch(err) {
+} catch (err) {
   console.log('Looks like your cart has been spoiled');
   localStorage.setItem(LOCALSTORAGE.CART, null);
 }
@@ -77,8 +77,6 @@ function showPasswordError() {
   passwordError.style.display = '';
 }
 
-loginInput.addEventListener('input', hideLoginError);
-passwordInput.addEventListener('input', hidePasswordError);
 
 /** Modal interaction functions */
 function disabledScroll() {
@@ -144,7 +142,9 @@ function logOut(event) {
   userName.style.display = '';
   buttonOut.style.display = '';
   cartButton.style.display = '';
+
   buttonOut.removeEventListener('click', logOut);
+  hideGoods();
   checkAuth();
 }
 
@@ -282,11 +282,6 @@ function initializeRestaurants(partners) {
   }
 }
 
-getData('./db/partners.json').then((partners) => {
-  initializeRestaurants(partners);
-});
-
-
 
 /** Logo functions */
 function hideGoods() {
@@ -297,32 +292,6 @@ function hideGoods() {
 
 
 
-/** Swiper slider */
-const swiper = new Swiper('.swiper-container', {
-  sliderPerView: 1,
-  // loop: true,
-  autoplay: {
-    delay: 4000,
-  },
-  effect: 'coverflow',
-  // grabCursor: true,
-  cubeEffect: {
-    shadow: false
-  },
-  // pagination: {
-  //   el: '.swiper-pagination',
-  //   type: 'bullets',
-  //   clickable: true,
-  // },
-  // navigation: {
-  //   nextEl: '.swiper-button-next',
-  //   prevEl: '.swiper-button-prev',
-  // },
-  scrollbar: {
-    el: '.swiper-scrollbar',
-    draggable: true,
-  },
-});
 
 /** Cart functions  */
 function totalPrice() {
@@ -410,7 +379,39 @@ function changeCartItemsCount(e) {
 }
 
 
+/** Swiper slider */
+const swiper = new Swiper('.swiper-container', {
+  sliderPerView: 1,
+  // loop: true,
+  autoplay: {
+    delay: 4000,
+  },
+  effect: 'coverflow',
+  // grabCursor: true,
+  cubeEffect: {
+    shadow: false
+  },
+  // pagination: {
+  //   el: '.swiper-pagination',
+  //   type: 'bullets',
+  //   clickable: true,
+  // },
+  // navigation: {
+  //   nextEl: '.swiper-button-next',
+  //   prevEl: '.swiper-button-prev',
+  // },
+  scrollbar: {
+    el: '.swiper-scrollbar',
+    draggable: true,
+  },
+});
+
+
 function init() {
+
+  loginInput.addEventListener('input', hideLoginError);
+  passwordInput.addEventListener('input', hidePasswordError);
+
   logo.addEventListener('click', hideGoods);
   cartButton.addEventListener("click", () => {
     rerenderCart();
@@ -419,7 +420,10 @@ function init() {
   close.addEventListener("click", toggleCartModal);
   cardsMenu.addEventListener('click', addToCart);
   cardsRestaurants.addEventListener('click', openGoods);
-  buttonClearCart.addEventListener('click', () => {cart.length = 0; rerenderCart()});
+  buttonClearCart.addEventListener('click', () => {
+    cart.length = 0;
+    rerenderCart()
+  });
   modalBody.addEventListener('click', changeCartItemsCount);
 
   /** Search functions */
@@ -446,6 +450,9 @@ function init() {
   })
 
   checkAuth()
+  getData('./db/partners.json').then((partners) => {
+    initializeRestaurants(partners);
+  });
 }
 
 
